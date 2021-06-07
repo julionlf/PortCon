@@ -24,5 +24,20 @@ class Modeling:
     #             
     # OUTPUTS
     #   sigma - NxN numpy array of doubles.
-    #
+    
         return np.cov(self.returns.values)
+
+    def exp_returns(self):
+    # DESCRIPTION:
+    #   Computes the stationary expected returns vector
+    #   of a collection of assets.
+    #
+    # INPUTS:
+    #   returns - pandas dataframe of returns. Index are dates,
+    #             rows are returns at any given date, columns
+    #             are the returns for any given asset.
+    #             
+    # OUTPUTS
+    #   sigma - Nx1 numpy array of doubles.
+    
+        return np.average(self.returns.values,axis=0)
