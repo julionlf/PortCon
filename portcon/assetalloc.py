@@ -92,8 +92,6 @@ class Asset_Allocation:
                 'fun': lambda weights: np.sum(weights)-1
             }
 
-            model = mdl()
-
             # Call the solver
             return minimize(mdl().portfolio_risk, weights_init,
             args=(sigma,), method="SLSQP",
