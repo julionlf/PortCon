@@ -9,29 +9,53 @@ DESCRIPTION:
 import numpy as np
 import pandas as pd
 from scipy.optimize import minimize
+from modeling import Modeling as mdl
 
 class Asset_Allocation:
 
-    def __init__(self, weights_init=None, portfolio_return=None, portfolio_risk=None):
+    def __init__(self, 
+    weights_init=None, 
+    sigma = None, 
+    asset_bounds=None,
+    target_return = None, 
+    asset_returns=None, 
+    ):
+        
         if weights_init is None:
             self.weights_init = []
         else:
             self.weights_init = weights_init
-        if portfolio_return is None:
-            self.portfolio_return = []
+        
+        if sigma is None:
+            self.sigma = []
         else:
-            self.portfolio_return = portfolio_return            
-        if portfolio_risk is None:
-            self.portfolio_risk = []
+            self.sigma = sigma
+        
+        if asset_bounds is None:
+            self.asset_bounds = []
         else:
-            self.portfolio_risk = portfolio_risk
+            self.asset_bounds = asset_bounds        
+        
+        if target_return is None:
+            self.target_return = []
+        else:
+            self.target_return = target_return
+        
+        if asset_returns is None:
+            self.asset_returns = []
+        else:
+            self.asset_returns = asset_returns            
 
-        print("Hi")
+    def minimize_vol(self,
+    weights_init = None, 
+    sigma = None, 
+    asset_bounds = None, 
+    target_return = None,
+    asset_returns = None):
 
-    def gmv(self, weights_init = None):
     # DESCRIPTION:
-    #   Computes the portfolio weights of a Global Minimum Variance
-    #   portfolio.
+    #   Computes the portfolio weights of a portfolio targeting some
+    #   return by minimizing the volatility.
     #
     # INPUTS:
     #   weights_init - 1D numpy array of doubles between 0 and 1,
@@ -44,4 +68,33 @@ class Asset_Allocation:
     #             weights for a global minimum variance portfolio.
 
             if weights_init is None:
-                weights_init = self.weights_init            
+                weights_init = self.weights_init
+            if sigma is None:
+                sigma = self.sigma                
+            if asset_bounds is None:
+                asset_bounds = self.asset_bounds
+            if target_return is None:
+                target_return = self.target_return
+            if asset_returns is None:
+                asset_returns = self.asset_returns                
+
+            # Initialize model object
+            model = mdl()
+
+            # Set the optimization constraints
+            return_is_target = {
+                'type': 'eq',
+                'args': (asset_returns,),
+                'fun': lambda weights, asset_returns: target_return - model.portfolio_return(asset_returns,weights)
+            }
+            weights_sum_to_1 = {
+                'type':'eq',
+                'fun': lambda weights: np.sum(weights)-1
+            }
+
+            # Call the solver
+            weights = minimize(model.portfolio_risk, weights_init,
+            args=(sigma,), method="SLSQP",
+            options={'disp': False},
+            constraints=(return_is_target, weights_sum_to_1),
+            bounds=asset_bounds)
