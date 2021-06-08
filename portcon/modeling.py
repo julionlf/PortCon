@@ -53,9 +53,9 @@ class Modeling:
     #   sigma - NxN numpy array of doubles.
 
             if returns is None:
-                return np.cov(self.returns.values)
+                return self.returns.cov()
             else:
-                return np.cov(returns.values)
+                return returns.cov()
             
 
     def exp_returns(self, returns=None):
@@ -72,9 +72,9 @@ class Modeling:
     #   r - Nx1 numpy array of doubles.
     
         if returns is None:
-            return np.average(self.returns.values,axis=0)
+            return self.returns.mean()
         else:
-            return np.average(returns.values,axis=0)
+            return returns.mean()
 
     def portfolio_return(self, asset_returns=None, weights=None):
     # DESCRIPTION:
@@ -115,4 +115,4 @@ class Modeling:
         if weights is None:
             weights = self.weights
             
-        return weights.T @ asset_risks @ weights        
+        return weights.T @ asset_risks @ weights
