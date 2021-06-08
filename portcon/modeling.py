@@ -76,7 +76,7 @@ class Modeling:
         else:
             return returns.mean()
 
-    def portfolio_return(self, asset_returns=None, weights=None):
+    def portfolio_return(self, weights=None, asset_returns=None):
     # DESCRIPTION:
     #   Computes the expected return of a portfolio of assets.
     #
@@ -96,7 +96,7 @@ class Modeling:
             
         return weights.T @ asset_returns
 
-    def portfolio_risk(self, asset_risks=None, weights=None):
+    def portfolio_risk(self, weights=None, asset_risks=None):
     # DESCRIPTION:
     #   Computes the risk of a portfolio of assets.
     #
