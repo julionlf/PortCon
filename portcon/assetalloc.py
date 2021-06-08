@@ -95,7 +95,7 @@ class Asset_Allocation:
             model = mdl()
 
             # Call the solver
-            return minimize(model.portfolio_risk, weights_init,
+            return minimize(mdl().portfolio_risk, weights_init,
             args=(sigma,), method="SLSQP",
             options={'disp': False},
             constraints=(return_is_target, weights_sum_to_1),
