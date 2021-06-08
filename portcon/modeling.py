@@ -115,4 +115,4 @@ class Modeling:
         if weights is None:
             weights = self.weights
             
-        return weights.T @ asset_risks @ weights
+        return (weights.T @ asset_risks @ weights)**0.5
