@@ -84,14 +84,11 @@ class Asset_Allocation:
             if asset_returns is None:
                 asset_returns = self.asset_returns                
 
-            # Initialize model object
-            model = mdl()
-
             # Set the optimization constraints
             return_is_target = {
                 'type': 'eq',
                 'args': (asset_returns,),
-                'fun': lambda weights, asset_returns: target_return - model.portfolio_return(asset_returns,weights)
+                'fun': lambda weights, asset_returns: target_return - mdl().portfolio_return(asset_returns,weights)
             }
             weights_sum_to_1 = {
                 'type':'eq',
@@ -145,11 +142,60 @@ class Asset_Allocation:
 
             # Define the objective function: Maximum Sharpe Ratio
             def sharpe_ratio(weights, risk_free_rate,asset_returns,sigma):                
-                return (mld().portfolio_return(weights,asset_returns) - risk_free_rate)/mdl().portfolio_risk(weights,sigma)
+                return (mdl().portfolio_return(weights,asset_returns) - risk_free_rate)/mdl().portfolio_risk(weights,sigma)
 
             # Call the solver
-            return minimize(mdl().portfolio_risk, weights_init,
+            return minimize(sharpe_ratio, weights_init,
             args=(risk_free_rate,asset_returns,sigma,), method="SLSQP",
             options={'disp': False},
             constraints=(weights_sum_to_1),
-            bounds=asset_bounds)            
+            bounds=asset_bounds)
+
+    def gmv(self,
+    weights_init = None, 
+    sigma = None, 
+    asset_bounds = None, 
+    risk_free_rate = 0.01,
+    asset_returns = None):
+
+    # DESCRIPTION:
+    #   Computes the portfolio weights of a portfolio targeting some
+    #   return by minimizing the volatility.
+    #
+    # INPUTS:
+    #   weights_init - 1D numpy array of doubles between 0 and 1,
+    #                  that add up to 1. The entries are the portfolio
+    #                  initial guess of portfolio weights.
+    #             
+    # OUTPUTS
+    #   weights - 1D numpy array of doubles between 0 and 1,
+    #             that add up to 1. The entries are the portfolio
+    #             weights for a global minimum variance portfolio.
+
+            if weights_init is None:
+                weights_init = self.weights_init
+            if sigma is None:
+                sigma = self.sigma                
+            if asset_bounds is None:
+                asset_bounds = self.asset_bounds
+            #if risk_free_rate is None:
+            #    risk_free_rate = self.risk_free_rate
+            if asset_returns is None:
+                asset_returns = self.asset_returns                
+
+            # Set the optimization constraints
+            weights_sum_to_1 = {
+                'type':'eq',
+                'fun': lambda weights: np.sum(weights)-1
+            }
+
+            # Define the objective function: Maximum Sharpe Ratio
+            def sharpe_ratio(weights, risk_free_rate,asset_returns,sigma):                
+                return (mdl().portfolio_return(weights,asset_returns) - risk_free_rate)/mdl().portfolio_risk(weights,sigma)
+
+            # Call the solver
+            return minimize(sharpe_ratio, weights_init,
+            args=(risk_free_rate,asset_returns,sigma,), method="SLSQP",
+            options={'disp': False},
+            constraints=(weights_sum_to_1),
+            bounds=asset_bounds)                
