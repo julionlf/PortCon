@@ -142,7 +142,7 @@ class Asset_Allocation:
 
             # Define the objective function: Maximum Sharpe Ratio
             def sharpe_ratio(weights, risk_free_rate,asset_returns,sigma):                
-                return (mdl().portfolio_return(weights,asset_returns) - risk_free_rate)/mdl().portfolio_risk(weights,sigma)
+                return -(mdl().portfolio_return(weights,asset_returns) - risk_free_rate)/mdl().portfolio_risk(weights,sigma)
 
             # Call the solver
             return minimize(sharpe_ratio, weights_init,
@@ -154,9 +154,8 @@ class Asset_Allocation:
     def gmv(self,
     weights_init = None, 
     sigma = None, 
-    asset_bounds = None, 
-    risk_free_rate = 0.01,
-    asset_returns = None):
+    asset_bounds = None
+    ):
 
     # DESCRIPTION:
     #   Computes the portfolio weights of a portfolio targeting some
@@ -180,8 +179,8 @@ class Asset_Allocation:
                 asset_bounds = self.asset_bounds
             #if risk_free_rate is None:
             #    risk_free_rate = self.risk_free_rate
-            if asset_returns is None:
-                asset_returns = self.asset_returns                
+            #if asset_returns is None:
+            #    asset_returns = self.asset_returns                
 
             # Set the optimization constraints
             weights_sum_to_1 = {
@@ -190,12 +189,12 @@ class Asset_Allocation:
             }
 
             # Define the objective function: Maximum Sharpe Ratio
-            def sharpe_ratio(weights, risk_free_rate,asset_returns,sigma):                
-                return (mdl().portfolio_return(weights,asset_returns) - risk_free_rate)/mdl().portfolio_risk(weights,sigma)
+            def sharpe_ratio(weights,sigma):                
+                return -1/mdl().portfolio_risk(weights,sigma)
 
             # Call the solver
             return minimize(sharpe_ratio, weights_init,
-            args=(risk_free_rate,asset_returns,sigma,), method="SLSQP",
+            args=(sigma,), method="SLSQP",
             options={'disp': False},
             constraints=(weights_sum_to_1),
             bounds=asset_bounds)                
