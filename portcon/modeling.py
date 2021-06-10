@@ -104,7 +104,7 @@ class Modeling:
     #   weights - 1D numpy array of doubles between 0 and 1, that 
     #             add up to 1. These are the weights allocated to
     #             each asset in the portfolio.
-    #   asset_risks - 2D array od doubles. Variance-covariance matrix
+    #   asset_risks - 2D array of doubles. Variance-covariance matrix
     #                 of the portfolio assets.
     #             
     # OUTPUTS
