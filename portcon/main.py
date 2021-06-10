@@ -26,4 +26,4 @@ print(model.portfolio_return(weights, asset_returns))
 # Create asset allocation object
 allocation = aa()
 print("Compute return target portfolio portfolio:")
-print(allocation.minimize_vol(weights,sigma,bounds,0.01,asset_returns))
+print(allocation.minimize_vol(weights,sigma,bounds,0.3,asset_returns))
