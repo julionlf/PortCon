@@ -19,8 +19,6 @@ from assetalloc import Asset_Allocation as aa
 #returns = returns[["Games","Steel"]]
 
 # User Inputs Crypto
-weights = np.repeat(1/7,7)
-bounds = ((0,1),)*7
 path2data = 'C:\\Users\\Julio\\Downloads\\'
 dataFiles = ["Crypto_Returns"]
 fullPath = path2data+dataFiles[0]+".csv"
@@ -31,6 +29,11 @@ gr = gr()
 print("Raw data import:")
 print(returns.head())
 print('\n')
+
+# Create equal weights vector
+noAssets = returns.shape[1]
+weights = np.repeat(1/noAssets,noAssets)
+bounds = ((0,1),)*noAssets
 
 print("Compute compunded return per month:")
 returns = returns.resample('M').apply(gr.compound).to_period('M')
