@@ -1,6 +1,7 @@
 # Import libraries
 import numpy as np
 import pandas as pd
+from get_returns import Get_Returns as gr
 from modeling import Modeling as mdl
 from assetalloc import Asset_Allocation as aa
 
@@ -25,10 +26,12 @@ fullPath = path2data+dataFiles[0]+".csv"
 
 # Import Crypto Data
 returns = pd.read_csv(fullPath,header = 0, index_col="Date", parse_dates=True)
+gr = gr()
 print("Raw data import:")
 print(returns.head())
-print("Converting daily returns to monthly returns data import:")
-print(returns.resample('M'))
+print("Compute compunded return per month:")
+returns = returns.resample('M').apply(gr.compound).to_period('M')
+print(returns)
 
 # Create model objectcs
 model = mdl()
