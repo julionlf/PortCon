@@ -1,4 +1,5 @@
 # Import libraries
+from operator import index
 import numpy as np
 import pandas as pd
 from get_returns import Get_Returns as gr
@@ -29,29 +30,47 @@ returns = pd.read_csv(fullPath,header = 0, index_col="Date", parse_dates=True)
 gr = gr()
 print("Raw data import:")
 print(returns.head())
+print('\n')
+
 print("Compute compunded return per month:")
 returns = returns.resample('M').apply(gr.compound).to_period('M')
 print(returns)
+print('\n')
 
 # Create model objectcs
 model = mdl()
 sigma = model.covariance(returns)
 asset_returns = model.exp_returns(returns)
-print('Portfolio Risk')
-print(model.portfolio_risk(weights, sigma))
-print('Portfolio  Expected Return:')
-print(model.portfolio_return(weights, asset_returns))
-print("Asset Returns:")
+
+print("Stationary Expected Returns of each asset:")
 print(asset_returns)
+print('\n')
+
+print('Equal Weights Portfolio Risk')
+print(model.portfolio_risk(weights, sigma))
+print('\n')
+
+print('Equal Weights Portfolio Expected Return:')
+print(model.portfolio_return(weights, asset_returns))
+print('\n')
 
 # Create asset allocation object
 allocation = aa()
-print("Compute return target portfolio:")
-print(allocation.minimize_vol(weights,sigma,bounds,0.01,asset_returns))
+
+print("Compute target return portfolio:")
+target_weights = pd.DataFrame(allocation.minimize_vol(weights,sigma,bounds,0.01,asset_returns).x,
+ index=returns.columns.values)
+print(str((target_weights*100).round(2)))
+print('\n')
+
 print("Compute MSR Portfolio:")
-print(allocation.msr(weights,sigma,bounds,0.0003,asset_returns))
+msr_weights = pd.DataFrame(allocation.msr(weights,sigma,bounds,0.0003,asset_returns).x,
+ index=returns.columns.values)
+print(str((msr_weights*100).round(2)))
+print('\n')
+
 print("Compute GMV Portfolio:")
-gmv_weights = allocation.gmv(weights,sigma,bounds)
-print(gmv_weights)
-for asset in returns.columns:
-    print(asset)
+gmv_weights = pd.DataFrame(allocation.gmv(weights,sigma,bounds).x,
+ index=returns.columns.values)
+print(str((gmv_weights*100).round(2)))
+print('\n')

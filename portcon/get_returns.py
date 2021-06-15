@@ -31,4 +31,6 @@ class Get_Returns:
             returns = self.returns
         
         return (returns + 1).prod() - 1
-        
+
+    def get_price_data(self,tickers):
+        print("Hello from get_prices")
