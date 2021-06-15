@@ -116,3 +116,10 @@ class Modeling:
             weights = self.weights
             
         return (weights.T @ asset_risks @ weights)**0.5
+
+    def dcc_garch(self):
+        print('Hello from dcc_garch')
+    # Method under development. Trying install from:
+    #   https://pypi.org/project/mgarch/
+    #   Project page: https://github.com/srivastavaprashant/mgarch
+    #   Sample implementation: https://openbase.com/python/mgarch
