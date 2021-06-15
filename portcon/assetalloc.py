@@ -6,6 +6,7 @@ DESCRIPTION:
 
 """
 
+from operator import is_not
 import numpy as np
 import pandas as pd
 from scipy.optimize import minimize
@@ -154,7 +155,9 @@ class Asset_Allocation:
     def gmv(self,
     weights_init = None, 
     sigma = None, 
-    asset_bounds = None
+    asset_bounds = None,
+    risk_free_rate = None,
+    asset_returns = None
     ):
 
     # DESCRIPTION:
@@ -177,10 +180,10 @@ class Asset_Allocation:
                 sigma = self.sigma                
             if asset_bounds is None:
                 asset_bounds = self.asset_bounds
-            #if risk_free_rate is None:
-            #    risk_free_rate = self.risk_free_rate
-            #if asset_returns is None:
-            #    asset_returns = self.asset_returns                
+            if risk_free_rate is None:
+                risk_free_rate = self.risk_free_rate
+            if asset_returns is None:
+                asset_returns = self.asset_returns                
 
             # Set the optimization constraints
             weights_sum_to_1 = {
@@ -197,4 +200,25 @@ class Asset_Allocation:
             args=(sigma,), method="SLSQP",
             options={'disp': False},
             constraints=(weights_sum_to_1),
-            bounds=asset_bounds)                
+            bounds=asset_bounds)
+            
+            # Get portflio weights
+#            weights = sol.x
+
+            # Compute portfolio risk
+#            port_risk = mdl().portfolio_risk(weights,sigma)
+            
+            # Compute portfolio returns
+#            if asset_returns is not None:
+#                port_ret = mdl().portfolio_return(weights,asset_returns)    
+#            else:
+#                port_ret = []
+            
+            # Compute portfolio sharpe
+#            if asset_returns is not None and risk_free_rate is not None:
+#                port_ret = mdl().portfolio_return(weights,asset_returns)
+#                sharpe = (port_ret - risk_free_rate)/port_risk
+#            else:
+#                sharpe = []
+
+#            return weights, port_ret, port_risk, sharpe

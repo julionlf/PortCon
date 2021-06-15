@@ -76,6 +76,13 @@ class Modeling:
         else:
             return returns.mean()
 
+    def dcc_garch(self):
+        print('Hello from dcc_garch')
+    # Method under development. Trying install from:
+    #   https://pypi.org/project/mgarch/
+    #   Project page: https://github.com/srivastavaprashant/mgarch
+    #   Sample implementation: https://openbase.com/python/mgarch    
+    
     def portfolio_return(self, weights=None, asset_returns=None):
     # DESCRIPTION:
     #   Computes the expected return of a portfolio of assets.
@@ -117,9 +124,13 @@ class Modeling:
             
         return (weights.T @ asset_risks @ weights)**0.5
 
-    def dcc_garch(self):
-        print('Hello from dcc_garch')
-    # Method under development. Trying install from:
-    #   https://pypi.org/project/mgarch/
-    #   Project page: https://github.com/srivastavaprashant/mgarch
-    #   Sample implementation: https://openbase.com/python/mgarch
+    def portfolio_sharpe(self, port_return=None, port_risk=None, risk_free_rate=None):
+        
+        if port_return is None:
+            port_risk = self.port_return
+        if port_risk is None:
+            port_risk = self.port_risk
+        if risk_free_rate is None:
+            risk_free_rate = self.risk_free_rate
+
+        return (port_return.values - risk_free_rate)/port_risk.values
