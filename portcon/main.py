@@ -53,18 +53,16 @@ print(asset_returns)
 print('\n')
 
 # Build factor model
-betas, asset_returns = model.factor_models(returns[0:-1], factors, predFactors)
+betas = model.factor_models(returns[0:-1], factors)
 print("Factor Models Betas")
 print(betas)
 print('\n')
-print("Factor Model Expected Returns")
-print(asset_returns)
-print("\n")
 
 # Create asset allocation object
 allocation = aa()
 
 # Compute equal weights portfolio
+print("Compute equal weights portfolio:")
 ew_return = model.portfolio_return(weights, asset_returns)
 ew_risk = model.portfolio_risk(weights, sigma)
 ew_return = model.portfolio_return(weights, asset_returns)
