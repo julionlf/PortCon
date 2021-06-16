@@ -10,12 +10,15 @@ DESCRIPTION:
 
 import numpy as np
 import pandas as pd
+from sklearn import linear_model
 
 class Modeling:
 
     def __init__(
-    self, returns=None, 
+    self, 
+    returns=None, 
     weights=None, 
+    factors=None,
     asset_returns=None, 
     asset_risks=None):
 
@@ -28,6 +31,11 @@ class Modeling:
             self.weights = []
         else:
             self.weights = weights
+
+        if factors is None:
+            self.factors = []
+        else:
+            self.factors = factors
 
         if asset_returns is None:
             self.asset_returns = []
@@ -76,6 +84,22 @@ class Modeling:
         else:
             return returns.mean()
 
+    def factor_models(self,returns=None,factors=None, predFactors=None):
+        if returns is None:
+            returns = self.returns
+        if factors is None:
+            factors=self.factors
+
+        regr = linear_model.LinearRegression()
+        regr.fit(factors, returns)
+        
+        #betas = pd.DataFrame(regr.coef_,index=returns.columns,columns=factors.columns)
+        #asset_returns = pd.DataFrame(regr.predict(predFactors).T,index=returns.columns)
+        if predFactors is not None:
+            return pd.DataFrame(regr.coef_,index=returns.columns,columns=factors.columns), pd.DataFrame(regr.predict(predFactors).T,index=returns.columns)
+        else:
+            return pd.DataFrame(regr.coef_,index=returns.columns,columns=factors.columns)
+    
     def dcc_garch(self):
         print('Hello from dcc_garch')
     # Method under development. Trying install from:
