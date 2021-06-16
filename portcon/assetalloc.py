@@ -201,24 +201,3 @@ class Asset_Allocation:
             options={'disp': False},
             constraints=(weights_sum_to_1),
             bounds=asset_bounds)
-            
-            # Get portflio weights
-#            weights = sol.x
-
-            # Compute portfolio risk
-#            port_risk = mdl().portfolio_risk(weights,sigma)
-            
-            # Compute portfolio returns
-#            if asset_returns is not None:
-#                port_ret = mdl().portfolio_return(weights,asset_returns)    
-#            else:
-#                port_ret = []
-            
-            # Compute portfolio sharpe
-#            if asset_returns is not None and risk_free_rate is not None:
-#                port_ret = mdl().portfolio_return(weights,asset_returns)
-#                sharpe = (port_ret - risk_free_rate)/port_risk
-#            else:
-#                sharpe = []
-
-#            return weights, port_ret, port_risk, sharpe

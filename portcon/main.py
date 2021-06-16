@@ -22,7 +22,8 @@ from assetalloc import Asset_Allocation as aa
 path2data = 'C:\\Users\\Julio\\Downloads\\'
 dataFiles = ["Crypto_Returns"]
 fullPath = path2data+dataFiles[0]+".csv"
-risk_free_rate = 0
+risk_free_rate = 0.02
+target_return = 0.1918
 
 # Import Crypto Data
 returns = pd.read_csv(fullPath,header = 0, index_col="Date", parse_dates=True)
@@ -52,12 +53,12 @@ print("Stationary Expected Returns of each asset:")
 print(asset_returns)
 print('\n')
 
-print('Equal Weights Portfolio Risk')
-print(model.portfolio_risk(weights, sigma))
-print('\n')
-
-print('Equal Weights Portfolio Expected Return:')
-print(model.portfolio_return(weights, asset_returns))
+ew_return = model.portfolio_return(weights, asset_returns)
+ew_risk = model.portfolio_risk(weights, sigma)
+ew_return = model.portfolio_return(weights, asset_returns)
+print('Equal Weights Portfolio Expected Return: ' + str((ew_return*100).round(2)))
+print('Equal Weights Portfolio Risk: '+ str((ew_risk*100).round(2)))
+print('Equal Weights Portfolio Sharpe:' + str(model.portfolio_sharpe(ew_return, ew_risk, risk_free_rate)))
 print('\n')
 
 # Create asset allocation object
@@ -65,25 +66,25 @@ allocation = aa()
 
 # Compute Portfolios
 print("Compute target return portfolio:")
-target_weights = pd.DataFrame(allocation.minimize_vol(weights,sigma,bounds,0.1,asset_returns).x,
+target_weights = pd.DataFrame(allocation.minimize_vol(weights,sigma,bounds,target_return,asset_returns).x,
  index=returns.columns.values,columns=None)
 target_port_return = model.portfolio_return(target_weights,asset_returns)
-target_port_risk = model.portfolio_risk(target_weights,sigma) 
+target_port_risk = model.portfolio_risk(target_weights,sigma)
 print((target_weights*100).round(2))
 print("Portfolio expected return: " + str((target_port_return.values*100).round(2)))
 print("Portfolio risk: " + str((target_port_risk.values*100).round(2)))
-print("Portfolio Sharpe: " + str(model.portfolio_sharpe(target_port_return,target_port_risk,risk_free_rate)))
+print("Portfolio Sharpe: " + str(model.portfolio_sharpe(target_port_return.values,target_port_risk.values,risk_free_rate)))
 print('\n')
 
 print("Compute MSR Portfolio:")
 msr_weights = pd.DataFrame(allocation.msr(weights,sigma,bounds,0.0003,asset_returns).x,
  index=returns.columns.values)
 msr_return = model.portfolio_return(msr_weights,asset_returns)
-msr_risk = model.portfolio_risk(msr_weights,sigma) 
+msr_risk = model.portfolio_risk(msr_weights,sigma)
 print((msr_weights*100).round(2))
 print("Portfolio expected return: " + str((msr_return.values*100).round(2)))
 print("Portfolio risk: " + str((msr_risk.values*100).round(2)))
-print("Portfolio Sharpe: " + str(model.portfolio_sharpe(msr_return,msr_risk,risk_free_rate)))
+print("Portfolio Sharpe: " + str(model.portfolio_sharpe(msr_return.values,msr_risk.values,risk_free_rate)))
 print('\n')
 
 print("Compute GMV Portfolio:")
@@ -94,5 +95,5 @@ gmv_risk = model.portfolio_risk(gmv_weights,sigma)
 print((gmv_weights*100).round(2))
 print("Portfolio expected return: " + str((gmv_return.values*100).round(2)))
 print("Portfolio risk: " + str((gmv_risk.values*100).round(2)))
-print("Portfolio Sharpe: " + str(model.portfolio_sharpe(gmv_return,gmv_risk,risk_free_rate)))
+print("Portfolio Sharpe: " + str(model.portfolio_sharpe(gmv_return.values,gmv_risk.values,risk_free_rate)))
 print('\n')

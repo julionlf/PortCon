@@ -133,4 +133,4 @@ class Modeling:
         if risk_free_rate is None:
             risk_free_rate = self.risk_free_rate
 
-        return (port_return.values - risk_free_rate)/port_risk.values
+        return (port_return - risk_free_rate)/port_risk
