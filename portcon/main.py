@@ -1,4 +1,3 @@
-#%%
 # Import libraries
 import numpy as np
 import pandas as pd
@@ -8,7 +7,6 @@ from get_returns import Get_Returns as gr
 from modeling import Modeling as mdl
 from assetalloc import Asset_Allocation as aa
 
-#%%
 # User Inputs Crypto
 path2data = 'C:\\Users\\Julio\\Downloads\\'
 dataFiles = ["Crypto_Returns","macro_factors","value_stocks_returns"]
