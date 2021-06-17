@@ -1,11 +1,14 @@
+#%%
 # Import libraries
 import numpy as np
 import pandas as pd
 from sklearn import linear_model
+from matplotlib import pyplot as plt
 from get_returns import Get_Returns as gr
 from modeling import Modeling as mdl
 from assetalloc import Asset_Allocation as aa
 
+#%%
 # User Inputs Crypto
 path2data = 'C:\\Users\\Julio\\Downloads\\'
 dataFiles = ["Crypto_Returns","macro_factors","value_stocks_returns"]
@@ -27,6 +30,8 @@ print('\n')
 # Import Crypto Data
 returns = pd.read_csv(fullPath,header = 0, index_col="Date", parse_dates=True)
 #print(returns.fillna(0,inplace=True))
+#%%
+plt.plot(returns)
 gr = gr()
 print("Raw data import:")
 print(returns.head())
@@ -41,8 +46,6 @@ bounds = ((0,1),)*noAssets
 print("Compute compunded return per month:")
 #returns = returns.resample('M').apply(gr.compound).to_period('M')
 returns = returns[0:-1]
-print(returns)
-print('\n')
 
 # Create model objectcs
 model = mdl()
@@ -120,3 +123,4 @@ print('\n')
 #returns.index = pd.to_datetime(returns.index, format ="%Y%m").to_period("M")
 #returns.columns = returns.columns.str.strip()
 #returns = returns[["Games","Steel"]]
+# %%
