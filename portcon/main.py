@@ -8,11 +8,11 @@ from assetalloc import Asset_Allocation as aa
 
 # User Inputs Crypto
 path2data = 'C:\\Users\\Julio\\Downloads\\'
-dataFiles = ["Crypto_Returns","macro_factors"]
-fullPath = path2data+dataFiles[0]+".csv"
+dataFiles = ["Crypto_Returns","macro_factors","value_stocks_returns"]
+fullPath = path2data+dataFiles[2]+".csv"
 fullPathFactors = path2data+dataFiles[1]+".csv"
 risk_free_rate = 0.02
-target_return = 0.1918
+target_return = 0.0382
 predFactors = [[0.005,-0.03]]
 fred_api_key = "70857098c42de42c8077c4704d26b023"
 macro_data_header_names = ["inflation","unemployment"]
@@ -38,8 +38,9 @@ bounds = ((0,1),)*noAssets
 
 # Compute compunded monthly returns from daily data
 print("Compute compunded return per month:")
-returns = returns.resample('M').apply(gr.compound).to_period('M')
-print(returns[0:-1])
+#returns = returns.resample('M').apply(gr.compound).to_period('M')
+returns = returns[0:-1]
+print(returns)
 print('\n')
 
 # Create model objectcs
@@ -53,7 +54,7 @@ print(asset_returns)
 print('\n')
 
 # Build factor model
-betas = model.factor_models(returns[0:-1], factors)
+betas = model.factor_models(returns, factors)
 print("Factor Models Betas")
 print(betas)
 print('\n')
