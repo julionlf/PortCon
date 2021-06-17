@@ -5,12 +5,10 @@ DESCRIPTION:
     Contains various methods to diversify portfolio weights.
 
 """
-
-from operator import is_not
 import numpy as np
 import pandas as pd
 from scipy.optimize import minimize
-from modeling import Modeling as mdl
+from portcon.modeling import Modeling as mdl
 
 class Asset_Allocation:
 
