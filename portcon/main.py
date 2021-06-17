@@ -30,8 +30,6 @@ print('\n')
 # Import Crypto Data
 returns = pd.read_csv(fullPath,header = 0, index_col="Date", parse_dates=True)
 #print(returns.fillna(0,inplace=True))
-#%%
-plt.plot(returns)
 gr = gr()
 print("Raw data import:")
 print(returns.head())
