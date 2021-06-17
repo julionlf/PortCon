@@ -54,7 +54,7 @@ sigma = model.covariance(returns)
 print("Stationary Expected Returns of each asset:")
 print(asset_returns)
 print('\n')
-
+print("Hi")
 # Build factor model
 #betas = model.factor_models(returns, factors)
 print("Factor Models Betas")
