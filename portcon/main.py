@@ -26,6 +26,7 @@ print('\n')
 
 # Import Crypto Data
 returns = pd.read_csv(fullPath,header = 0, index_col="Date", parse_dates=True)
+#print(returns.fillna(0,inplace=True))
 gr = gr()
 print("Raw data import:")
 print(returns.head())
@@ -54,9 +55,9 @@ print(asset_returns)
 print('\n')
 
 # Build factor model
-betas = model.factor_models(returns, factors)
+#betas = model.factor_models(returns, factors)
 print("Factor Models Betas")
-print(betas)
+#print(betas)
 print('\n')
 
 # Create asset allocation object
