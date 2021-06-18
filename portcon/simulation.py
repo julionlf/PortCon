@@ -1,4 +1,6 @@
 # Import libraries
+import numpy as np
+import pandas as pd
 
 class Simulation:
 
@@ -23,7 +25,7 @@ class Simulation:
         if returns is None:
             returns = self.returns
         if principal is None:
-            principal = self.principal            
+            principal = self.principal     
 
         if principal is None:
             return (returns @ weights + 1).cumprod()
