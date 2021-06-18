@@ -3,7 +3,7 @@
 
 class Simulation:
 
-    def __init__(self,weights=None,returns=None,principal=None):
+    def __init__(self,weights=None,returns=None):
         if weights is None:
             self.weights = []
         else:
@@ -12,21 +12,22 @@ class Simulation:
             self.returns = []
         else:
             self.returns = returns
-        if principal is None:
-            self.principal = []
-        else:
-            self.principal = principal
+        #if principal is None:
+        #    self.principal = []
+        #else:
+        #    self.principal = principal
     
-    def backtest(self,weights=None,returns=None,principal=None):
+    def backtest(self,weights=None,returns=None):
 
         if weights is None:
             weights = self.weights
         if returns is None:
             returns = self.returns
-        if principal is None:
-            principal = self.principal
+        #if principal is None:
+            #principal = self.principal
 
-        if principal is None:
-            return ((returns @ weights)+1).cumprod()
-        else:
-            return principal*((returns @ weights)+1).cumprod()
+        return ((returns @ weights)+1).cumprod()
+        #if principal is None:
+        #    return ((returns @ weights)+1).cumprod()
+        #else:
+        #    return principal*((returns @ weights)+1).cumprod()
