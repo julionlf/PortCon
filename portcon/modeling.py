@@ -20,7 +20,7 @@ class Modeling:
     weights=None, 
     factors=None,
     asset_returns=None, 
-    asset_risks=None):
+    sigma=None):
 
         if returns is None:
             self.returns = []
@@ -42,10 +42,10 @@ class Modeling:
         else:
             self.asset_returns = asset_returns
 
-        if asset_risks is None:
-            self.asset_risks = []
+        if sigma is None:
+            self.sigma = []
         else:
-            self.asset_risks = asset_risks
+            self.sigma = sigma            
 
     def covariance(self,returns=None):  
     # DESCRIPTION:
@@ -107,6 +107,16 @@ class Modeling:
     #   Project page: https://github.com/srivastavaprashant/mgarch
     #   Sample implementation: https://openbase.com/python/mgarch    
     
+    def risk_contribution(self,weights=None,sigma=None):
+        if weights is None:
+            weights = self.weights
+        if sigma is None:
+            sigma = self.sigma
+
+        port_risk = self.portfolio_risk(weights,sigma)[0][0]
+        marginal_contribution = sigma @ weights            
+        return np.multiply(marginal_contribution,weights)/port_risk
+    
     def portfolio_return(self, weights=None, asset_returns=None):
     # DESCRIPTION:
     #   Computes the expected return of a portfolio of assets.
@@ -127,7 +137,7 @@ class Modeling:
             
         return weights.T @ asset_returns
 
-    def portfolio_risk(self, weights=None, asset_risks=None):
+    def portfolio_risk(self, weights=None, sigma=None):
     # DESCRIPTION:
     #   Computes the risk of a portfolio of assets.
     #
@@ -141,12 +151,12 @@ class Modeling:
     # OUTPUTS
     #   sigmap - scalar double. Risk of the portfolio
     
-        if asset_risks is None:
-            asset_risks = self.asset_risks
+        if sigma is None:
+            sigma = self.sigma
         if weights is None:
-            weights = self.weights
+            sigma = self.sigma
             
-        return (weights.T @ asset_risks @ weights)**0.5
+        return (weights.T @ sigma @ weights)**0.5
 
     def portfolio_sharpe(self, port_return=None, port_risk=None, risk_free_rate=None):
         

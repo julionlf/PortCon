@@ -18,7 +18,8 @@ class Asset_Allocation:
     asset_bounds=None,
     target_return = None, 
     asset_returns=None,
-    risk_free_rate=None 
+    risk_free_rate=None,
+    target_risk=None
     ):
         
         if weights_init is None:
@@ -50,6 +51,11 @@ class Asset_Allocation:
             self.risk_free_rate = []
         else:
             self.risk_free_rate = risk_free_rate
+
+        if target_risk is None:
+            self.target_risk = []
+        else:
+            self.target_risk = target_risk                        
 
     def minimize_vol(self,
     weights_init = None, 
@@ -199,3 +205,86 @@ class Asset_Allocation:
             options={'disp': False},
             constraints=(weights_sum_to_1),
             bounds=asset_bounds)
+
+    def trp(self,
+    weights_init = None, 
+    sigma = None, 
+    asset_bounds = None,
+    target_risk = None
+    ):
+
+    # DESCRIPTION:
+    #   Computes the portfolio weights of a portfolio targeting some
+    #   return by minimizing the volatility.
+    #
+    # INPUTS:
+    #   weights_init - 1D numpy array of doubles between 0 and 1,
+    #                  that add up to 1. The entries are the portfolio
+    #                  initial guess of portfolio weights.
+    #             
+    # OUTPUTS
+    #   weights - 1D numpy array of doubles between 0 and 1,
+    #             that add up to 1. The entries are the portfolio
+    #             weights for a global minimum variance portfolio.
+
+            if weights_init is None:
+                weights_init = self.weights_init
+            if sigma is None:
+                sigma = self.sigma                
+            if asset_bounds is None:
+                asset_bounds = self.asset_bounds
+            if target_risk is None:
+                target_risk = self.target_risk   
+
+            # Set the optimization constraints
+            weights_sum_to_1 = {
+                'type':'eq',
+                'fun': lambda weights: np.sum(weights)-1
+            }
+
+            # Define the objective function: Maximum Sharpe Ratio
+            def msd_risk(weights,target_risk,sigma):
+                w_contribs = mdl.risk_contribution(weights,sigma)                
+                return ((w_contribs-target_risk)**2).sum()
+
+            # Call the solver
+            return minimize(msd_risk, weights_init,
+            args=(target_risk,sigma,), method="SLSQP",
+            options={'disp': False},
+            constraints=(weights_sum_to_1),
+            bounds=asset_bounds)            
+
+    def erp(self,
+    weights_init = None, 
+    sigma = None, 
+    asset_bounds = None,
+    target_risk = None
+    ):
+
+    # DESCRIPTION:
+    #   Computes the portfolio weights of a portfolio targeting some
+    #   return by minimizing the volatility.
+    #
+    # INPUTS:
+    #   weights_init - 1D numpy array of doubles between 0 and 1,
+    #                  that add up to 1. The entries are the portfolio
+    #                  initial guess of portfolio weights.
+    #             
+    # OUTPUTS
+    #   weights - 1D numpy array of doubles between 0 and 1,
+    #             that add up to 1. The entries are the portfolio
+    #             weights for a global minimum variance portfolio.
+
+            if weights_init is None:
+                weights_init = self.weights_init
+            if sigma is None:
+                sigma = self.sigma                
+            if asset_bounds is None:
+                asset_bounds = self.asset_bounds
+            if target_risk is None:
+                target_risk = self.target_risk   
+
+            n = sigma.shape[0]
+            
+            # Call the solver
+            return self.trp(weights_init,sigma,asset_bounds,np.repeat(1/n,n))                      
