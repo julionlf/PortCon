@@ -108,10 +108,10 @@ class Modeling:
     #   Sample implementation: https://openbase.com/python/mgarch    
     
     def risk_contribution(self,weights=None,sigma=None):
-        if weights is None:
-            weights = self.weights
-        if sigma is None:
-            sigma = self.sigma
+        #if weights is None:
+        #    weights = self.weights
+        #if sigma is None:
+        #    sigma = self.sigma
 
         port_risk = self.portfolio_risk(weights,sigma)[0][0]
         marginal_contribution = sigma @ weights            
