@@ -151,9 +151,9 @@ class Modeling:
     # OUTPUTS
     #   sigmap - scalar double. Risk of the portfolio
     
-        if sigma is None:
-            sigma = self.sigma
         if weights is None:
+            weights = self.weights        
+        if sigma is None:
             sigma = self.sigma
             
         return (weights.T @ sigma @ weights)**0.5
