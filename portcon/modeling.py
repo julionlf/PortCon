@@ -102,7 +102,7 @@ class Modeling:
     #   Sample implementation: https://openbase.com/python/mgarch    
     
     
-    def risk_controbution(self,weights=None,sigma=None):
+    def risk_contribution(self,weights=None,sigma=None):
         if weights is None:
             weights = self.weights
         if sigma is None:
