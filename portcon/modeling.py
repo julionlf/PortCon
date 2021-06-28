@@ -111,8 +111,8 @@ class Modeling:
         #port_risk = self.portfolio_risk(weights,sigma)
         port_risk = (weights.T @ sigma @ weights)**0.5
         marginal_contribution = sigma @ weights
-        return np.multiply(marginal_contribution,weights)/port_risk
-    
+        return np.multiply(marginal_contribution,weights)/(port_risk[0][0])
+
     def portfolio_return(self, weights=None, asset_returns=None):
     # DESCRIPTION:
     #   Computes the expected return of a portfolio of assets.
