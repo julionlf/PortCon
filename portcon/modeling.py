@@ -14,13 +14,7 @@ from sklearn import linear_model
 
 class Modeling:
 
-    def __init__(
-    self, 
-    returns=None, 
-    weights=None, 
-    factors=None,
-    asset_returns=None, 
-    sigma=None):
+    def __init__(self, returns=None, weights=None, factors=None, asset_returns=None, sigma=None):
 
         if returns is None:
             self.returns = []
