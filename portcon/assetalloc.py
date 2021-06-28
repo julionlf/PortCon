@@ -244,7 +244,7 @@ class Asset_Allocation:
 
             # Define the objective function: Maximum Sharpe Ratio
             def msd_risk(weights,target_risk,sigma):
-                w_contribs = mdl.risk_contribution(weights,sigma)                
+                w_contribs = mdl.risk_contribution([],weights,sigma)                
                 return ((w_contribs-target_risk)**2).sum()
 
             # Call the solver
@@ -257,8 +257,7 @@ class Asset_Allocation:
     def erp(self,
     weights_init = None, 
     sigma = None, 
-    asset_bounds = None,
-    target_risk = None
+    asset_bounds = None
     ):
 
     # DESCRIPTION:
@@ -281,8 +280,6 @@ class Asset_Allocation:
                 sigma = self.sigma                
             if asset_bounds is None:
                 asset_bounds = self.asset_bounds
-            if target_risk is None:
-                target_risk = self.target_risk   
 
             n = sigma.shape[0]
             
