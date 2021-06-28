@@ -108,7 +108,9 @@ class Modeling:
         if sigma is None:
             sigma = self.sigma
 
-        return sigma
+        port_risk = self.portfolio_risk(weights,sigma)
+        marginal_contribution = sigma @ weights
+        return np.multiply(marginal_contribution,weights)/port_risk
     
     #def risk_contribution(self, weights=None, sigma=None):
     #    if weights is None:
