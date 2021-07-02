@@ -196,11 +196,11 @@ class Asset_Allocation:
             }
 
             # Define the objective function: Maximum Sharpe Ratio
-            def sharpe_ratio(weights,sigma):                
-                return -1/mdl().portfolio_risk(weights,sigma)
+            def port_risk(weights,sigma):                
+                return mdl().portfolio_risk(weights,sigma)
 
             # Call the solver
-            return minimize(sharpe_ratio, weights_init,
+            return minimize(port_risk, weights_init,
             args=(sigma,), method="SLSQP",
             options={'disp': False},
             constraints=(weights_sum_to_1),
@@ -284,4 +284,41 @@ class Asset_Allocation:
             n = sigma.shape[0]
             
             # Call the solver
-            return self.trp(weights_init,sigma,asset_bounds,np.repeat(1/n,n))                      
+            return self.trp(weights_init,sigma,asset_bounds,np.repeat(1/n,n))
+
+    def custom(self,
+        weights_init=None,
+        sigma=None,
+        asset_bounds=None,
+        alpha=None):
+
+            if weights_init is None:
+                weights_init = self.weights_init
+            if sigma is None:
+                sigma = self.sigma                
+            if asset_bounds is None:
+                asset_bounds = self.asset_bounds
+            if alpha is None:
+                alpha = 0.5
+
+            n = sigma.shape[0]
+            target_risk = np.repeat(1/n,n)            
+            # Set the optimization constraints
+            weights_sum_to_1 = {
+                'type':'eq',
+                'fun': lambda weights: np.sum(weights)-1
+            }
+
+            # Define the objective function: Maximum Sharpe Ratio
+            def obj(weights,target_risk,sigma,alpha):
+                w_contribs = mdl().risk_contribution(weights,sigma)
+                port_risk=mdl().portfolio_risk(weights,sigma)
+                risk_contribs = ((w_contribs-target_risk)**2).sum()
+                return alpha*risk_contribs + (1-alpha)*port_risk
+
+            # Call the solver
+            return minimize(obj, weights_init,
+            args=(target_risk,sigma,alpha,), method="SLSQP",
+            options={'disp': False},
+            constraints=(weights_sum_to_1),
+            bounds=asset_bounds)     
