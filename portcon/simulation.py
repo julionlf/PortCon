@@ -83,7 +83,8 @@ class Simulation:
     sigma = None, 
     asset_bounds = None, 
     risk_free_rate = None,
-    asset_returns = None):
+    asset_returns = None,
+    make_plot = False):
 
         if target_returns is None:
             target_returns = np.arange(0,0.2,0.01)
@@ -102,13 +103,17 @@ class Simulation:
         target_port_risks = np.zeros(target_returns.shape[0])
 
         # Compute risks for all target returns
+        a = 0
         for target_return in target_returns:
             target_weights = pd.DataFrame(aa().minimize_vol(weights_init,sigma,asset_bounds,target_return,asset_returns).x,
                 index=asset_returns.index.values,columns=None)
-            target_port_risks[0] = mdl().portfolio_risk(target_weights,sigma)[0][0]           
-
-        # Plot the frontier            
-        plt.plot(target_port_risks,target_returns)
+            target_port_risks[a] = mdl().portfolio_risk(target_weights,sigma)[0][0]
+            a=a+1
+            
+        # Plot the frontier
+        if make_plot is True:    
+            plt.plot(target_port_risks,target_returns)
+        return target_port_risks
                 
                  
 
