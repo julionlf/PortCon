@@ -1,6 +1,7 @@
 # Import libraries
 import numpy as np
 import pandas as pd
+from matplotlib import pyplot as plt
 from portcon.modeling import Modeling as mdl
 from portcon.assetalloc import Asset_Allocation as aa
 
@@ -85,7 +86,7 @@ class Simulation:
     asset_returns = None):
 
         if target_returns is None:
-            target_returns = self.target_returns
+            target_returns = np.arange(0,0.2,0.01)
         if weights_init is None:
             weights_init = self.weights_init
         if sigma is None:
@@ -96,15 +97,18 @@ class Simulation:
             risk_free_rate = self.risk_free_rate
         if asset_returns is None:
             asset_returns = self.asset_returns
-        
-        print(target_returns)
+
+        # Initialize risks array        
+        target_port_risks = np.zeros(target_returns.shape[0])
+
+        # Compute risks for all target returns
         for target_return in target_returns:
-            print(target_return)
             target_weights = pd.DataFrame(aa().minimize_vol(weights_init,sigma,asset_bounds,target_return,asset_returns).x,
-                index=asset_returns.columns.values,columns=None)
-            target_port_return = mdl().portfolio_return(target_weights,asset_returns)[0]
-            target_port_risk = mdl().portfolio_risk(target_weights,sigma)[0][0]
-            print("Return: "+target_port_return + ", Risk: " + target_port_risk)
+                index=asset_returns.index.values,columns=None)
+            target_port_risks[0] = mdl().portfolio_risk(target_weights,sigma)[0][0]           
+
+        # Plot the frontier            
+        plt.plot(target_port_risks,target_returns)
                 
                  
 
