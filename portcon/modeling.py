@@ -94,13 +94,43 @@ class Modeling:
         else:
             return pd.DataFrame(regr.coef_,index=returns.columns,columns=factors.columns)
     
-    def dcc_garch(self):
-        print('Hello from dcc_garch')
-    # Method under development. Trying install from:
-    #   https://pypi.org/project/mgarch/
-    #   Project page: https://github.com/srivastavaprashant/mgarch
-    #   Sample implementation: https://openbase.com/python/mgarch    
-    
+    def dcc_garch(self,
+        returns=None,
+        periods=1,
+        arma_alpha=0,arma_beta=0,
+        garch_alpha=1,garch_beta=1,
+        dcc_garch_alpha=1,dcc_garch_beta=1
+    ):
+
+        if returns is None:
+            returns = self.returns
+
+        # Prep interface with R
+        import rpy2.robjects as robjects
+        from rpy2.robjects import pandas2ri
+        pandas2ri.activate()
+
+        # Defining the R script and loading the instance in Python
+        r = robjects.r
+        r['source']('dcc_garch.R')
+
+        # Load DCC-GARCH function
+        dcc_garch_function = robjects.globalenv["dcc_garch"]
+
+        # Convert pandas returns df to R df
+        returns_r = pandas2ri.py2rpy(returns)
+
+        # Estimate covariance matrix using DCC-Garch
+        sigma = dcc_garch_function(returns_r,periods,
+        arma_alpha,arma_beta,               # ARMA model memory and stochastic parameters
+        garch_alpha,garch_beta,             # GARCH model memory and stochastic parameters
+        dcc_garch_alpha,dcc_garch_beta)     # DCC model memory and stochastic parameters
+
+        # Relabel the columns and indeces
+        sigma.columns = returns.columns.values
+        sigma.index = returns.columns.values
+
+        return sigma
     
     def risk_contribution(self,weights=None,sigma=None):
         if weights is None:
