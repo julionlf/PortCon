@@ -10,7 +10,7 @@ dcc_garch <- function(data,periods,
   # Read in file provided by user and eliminate date column
   #data <- read.csv(file,TRUE,',')
   drops <- c("Date")
-  data[ , !(names(data) %in% drops)]
+  data <- data[ , !(names(data) %in% drops)]
   
   # Step 1: Specify Univariate-GARCH
   univariate_spec <- ugarchspec(
