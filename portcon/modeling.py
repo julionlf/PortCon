@@ -112,7 +112,7 @@ class Modeling:
 
         # Defining the R script and loading the instance in Python
         r = robjects.r
-        r['source']('dcc_garch.R')
+        r['source']('portcon\\dcc_garch.R')
 
         # Load DCC-GARCH function
         dcc_garch_function = robjects.globalenv["dcc_garch"]
